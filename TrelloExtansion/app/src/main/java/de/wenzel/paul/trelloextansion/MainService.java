@@ -39,7 +39,7 @@ public class MainService extends Service {
 
     public static final String APPLICATION_KEY = "333e701bd67012a2f36ff556070af5de";
     public static final String USER_TOKEN = "e079cec790ac05585585339d166b3201594d7c54d2e4a076c815137e64474da8";
-    public static final String STANDARD_LIST_ID = "56ac7232a03d5d6ebdf964bb";
+    public static final String STANDARD_LIST_ID = "56ae41b894dee67e99ef6b15";
 
 /////////////////////////////////////////////////Konstruktor/////////////////////////////////////////////////
 

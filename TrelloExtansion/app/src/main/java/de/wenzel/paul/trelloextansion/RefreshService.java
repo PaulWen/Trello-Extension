@@ -260,6 +260,7 @@ public class RefreshService extends Service {
                             in.close();
 
                             list = new JSONObject(jsonString);
+//                            Log.d("LISTE:", list.getString("name") + " - " + list.getString("id"));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

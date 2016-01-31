@@ -2,32 +2,32 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\TrelloExtansion\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jar="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\Trello Extension\TrelloExtansion\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\Trello Extension\TrelloExtansion\app\build\intermediates\pre-dexed\debug\classes-665d01bc736991c0461a077fb41ce41d6da81669.jar" />
+    </item>
+    <item
+        jar="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\Trello Extension\TrelloExtansion\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
-        <dex dex="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\TrelloExtansion\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-fc80eb8753c1fccb71407016797c8c7be930c1f2.jar" />
+        <dex dex="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\Trello Extension\TrelloExtansion\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-5a33787b20514b83433df021c12dcff6d28f8704.jar" />
     </item>
     <item
         jar="C:\Users\Wenze\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
-        <dex dex="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\TrelloExtansion\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-1c0a3b7a2097c9deb901d1b522c2e0626fca3f83.jar" />
+        <dex dex="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\Trello Extension\TrelloExtansion\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-1c0a3b7a2097c9deb901d1b522c2e0626fca3f83.jar" />
     </item>
     <item
-        jar="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\TrelloExtansion\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
-        <dex dex="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\TrelloExtansion\app\build\intermediates\pre-dexed\debug\classes-5f50574ff6b3245f0bd812a5050a072ec8aa8686.jar" />
-    </item>
-    <item
-        jar="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\TrelloExtansion\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
+        jar="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\Trello Extension\TrelloExtansion\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
-        <dex dex="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\TrelloExtansion\app\build\intermediates\pre-dexed\debug\classes-f529f0217f011b301ec3ae8fa18247f8bd0ef250.jar" />
+        <dex dex="C:\Users\Wenze\Documents\Programmieren\Android\Android Workspace\Trello Extension\TrelloExtansion\app\build\intermediates\pre-dexed\debug\classes-2fcc7657fc412b75b113984569331fbeec03890c.jar" />
     </item>
 
 </items>
