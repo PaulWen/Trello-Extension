@@ -1,15 +1,18 @@
 package de.wenzel.paul.trelloextansion;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
@@ -84,7 +87,6 @@ public class RefreshService extends Service {
                     .setLargeIcon(((BitmapDrawable) getResources().getDrawable(R.drawable.new_task)).getBitmap())
                     .setContentIntent(pendingNewCardIntent)
                     .addAction(R.drawable.ic_refresh_black_24dp, "Aktualisieren", pendingRefreshIntent)
-//                    .setShowWhen(false)
                     .setPriority(Notification.PRIORITY_LOW).build();
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -94,7 +96,7 @@ public class RefreshService extends Service {
 
             notificationManager.notify(notificationIdCounter++, notification);
 
-            // alle Notifications erstellen
+            // alle Notifications erstellen, welche keine hohe Prio haben
             for (TrelloCardDataObject object : trelloCardsDataObjects) {
 
                 Calendar date = new GregorianCalendar();
@@ -105,9 +107,27 @@ public class RefreshService extends Service {
                 date.set(Calendar.MILLISECOND, 0);
                 date.add(Calendar.DATE, 1);
 
-                // wenn die Aufgabe vor Heute oder genau Heute fällig ist, diese anzeigen
-                if (object.getDueDate() != null && object.getDueDate().compareTo(new Date(date.getTimeInMillis())) <= 0) {
-                    createNotification(object.getBoardName() + ": " + object.getListName(), object.getCardName(), object.getCardShortUrl(), object.getCardID());
+                // wenn die Aufgabe vor Heute oder genau Heute fällig ist, diese anzeigen & keine hohe Prio hat
+                if (!object.isHighPriority() && object.getDueDate() != null && object.getDueDate().compareTo(new Date(date.getTimeInMillis())) <= 0) {
+                    createNotification(object);
+
+                }
+            }
+
+            // alle Notifications erstellen, welche eine hohe Prio haben
+            for (TrelloCardDataObject object : trelloCardsDataObjects) {
+
+                Calendar date = new GregorianCalendar();
+                // reset hour, minutes, seconds and millis
+                date.set(Calendar.HOUR_OF_DAY, 0);
+                date.set(Calendar.MINUTE, 0);
+                date.set(Calendar.SECOND, 0);
+                date.set(Calendar.MILLISECOND, 0);
+                date.add(Calendar.DATE, 1);
+
+                // wenn die Aufgabe vor Heute oder genau Heute fällig ist, diese anzeigen & eine hohe Prio hat
+                if (object.isHighPriority() && object.getDueDate() != null && object.getDueDate().compareTo(new Date(date.getTimeInMillis())) <= 0) {
+                    createNotification(object);
 
                 }
             }
@@ -134,29 +154,65 @@ public class RefreshService extends Service {
     /**
      * Die Methode erstellt eine Notification.
      */
-    private void createNotification(String title, String text, String cardShortUrl, String cardId) {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void createNotification(TrelloCardDataObject trelloCardDataObject) {
         // Prepare intent which is triggered if the notification is selected
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(cardShortUrl));
+        intent.setData(Uri.parse(trelloCardDataObject.getCardShortUrl()));
         PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
 
         // Archievieren Intent vorbereiten
         Intent archivateIntent = new Intent(Intent.ACTION_VIEW);
         archivateIntent.setClass(this, ArchivateService.class);
-        archivateIntent.putExtra("cardId", cardId);
+        archivateIntent.putExtra("cardId", trelloCardDataObject.getCardId());
         archivateIntent.putExtra("notificationId", notificationIdCounter);
         PendingIntent pendingArchivateIntent = PendingIntent.getService(this, (int) System.currentTimeMillis(), archivateIntent, 0);
 
-        // Build notification
-        Notification notification = new Notification.Builder(this)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setLargeIcon(((BitmapDrawable) getResources().getDrawable(R.drawable.task)).getBitmap())
-                .setSmallIcon(R.drawable.ic_watch_later_black_24dp, 0)
-                .setContentIntent(pIntent)
-                .addAction(R.drawable.ic_done_black_24dp, "Fertig", pendingArchivateIntent)
-                .setPriority(Notification.PRIORITY_MIN)
-                .setShowWhen(false).build();
+        // Reshedule Intent vorbereiten
+        Intent resheduleIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        resheduleIntent.setClass(this, DatePickerService.class);
+        resheduleIntent.putExtra("cardId", trelloCardDataObject.getCardId());
+        resheduleIntent.putExtra("notificationId", notificationIdCounter);
+        PendingIntent pendingResheduleIntent = PendingIntent.getService(this, (int) System.currentTimeMillis(), resheduleIntent, 0);
+
+        // Prioritize Intent vorbereiten
+        Intent prioritizeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        prioritizeIntent.setClass(this, PrioritizeService.class);
+        prioritizeIntent.putExtra("cardId", trelloCardDataObject.getCardId());
+        prioritizeIntent.putExtra("highPriority", trelloCardDataObject.isHighPriority());
+        prioritizeIntent.putExtra("highPriorityLabelId", trelloCardDataObject.getHighPriorityLabelId());
+        PendingIntent pendingPrioritizeIntent = PendingIntent.getService(this, (int) System.currentTimeMillis(), prioritizeIntent, 0);
+
+
+        Notification notification = null;
+        if (trelloCardDataObject.isHighPriority()) {
+            // Build notification
+            notification = new Notification.Builder(this)
+                    .setContentTitle(trelloCardDataObject.getBoardName() + ": " + trelloCardDataObject.getListName())
+                    .setContentText(trelloCardDataObject.getCardName())
+                    .setLargeIcon(((BitmapDrawable) getResources().getDrawable(R.drawable.task)).getBitmap())
+                    .setSmallIcon(R.drawable.ic_watch_later_black_24dp, 0)
+                    .setContentIntent(pIntent)
+                    .addAction(R.drawable.ic_done_black_24dp, "Fertig", pendingArchivateIntent)
+                    .addAction(R.drawable.ic_event_black_24dp, "Datum", pendingResheduleIntent)
+                    .addAction(R.drawable.ic_favorite_black_24dp, "Wichtig", pendingPrioritizeIntent)
+                    .setPriority(Notification.PRIORITY_MIN)
+                    .setColor(Color.RED)
+                    .setShowWhen(false).build();
+        } else {
+            // Build notification
+            notification = new Notification.Builder(this)
+                    .setContentTitle(trelloCardDataObject.getBoardName() + ": " + trelloCardDataObject.getListName())
+                    .setContentText(trelloCardDataObject.getCardName())
+                    .setLargeIcon(((BitmapDrawable) getResources().getDrawable(R.drawable.task)).getBitmap())
+                    .setSmallIcon(R.drawable.ic_watch_later_black_24dp, 0)
+                    .setContentIntent(pIntent)
+                    .addAction(R.drawable.ic_done_black_24dp, "Fertig", pendingArchivateIntent)
+                    .addAction(R.drawable.ic_event_black_24dp, "Datum", pendingResheduleIntent)
+                    .addAction(R.drawable.ic_favorite_black_24dp, "Wichtig", pendingPrioritizeIntent)
+                    .setPriority(Notification.PRIORITY_MIN)
+                    .setShowWhen(false).build();
+        }
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // die Notification soll nicht gelöscht werden können
@@ -265,8 +321,23 @@ public class RefreshService extends Service {
                             e.printStackTrace();
                         }
 
+                        // gucken, ob eine Karte ein rotes Lable hat und damit eine hohe Priorität
+                        boolean highPriority = false;
+                        String highPriorityLabelId = null;
+                        JSONArray cardLabelsJsonArray = card.getJSONArray("labels");
+                        for (int k = 0; k < cardLabelsJsonArray.length(); k++) {
+                            JSONObject lable = cardLabelsJsonArray.getJSONObject(k);
+
+                            // wenn ein rotes Lable dabei ist, dann hat die Karte eine hohe Priorität!
+                            if (lable.getString("color").equals("red")) {
+                                highPriority = true;
+                                highPriorityLabelId = lable.getString("id");
+                                break;
+                            }
+                        }
+
                         // das TrelloCardDataObject erstellen mit allen Infos
-                        cardDataObject = new TrelloCardDataObject(card.get("id").toString(), card.get("shortUrl").toString(), board.get("name").toString(), list.get("name").toString(), card.get("name").toString(), convertDate(card.get("due").toString()));
+                        cardDataObject = new TrelloCardDataObject(card.get("id").toString(), card.get("shortUrl").toString(), board.getString("id"), board.get("name").toString(), list.get("name").toString(), card.get("name").toString(), convertDate(card.get("due").toString()), highPriority, highPriorityLabelId);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

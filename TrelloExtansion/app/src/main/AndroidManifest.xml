@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <application
         android:allowBackup="true"
@@ -38,6 +40,12 @@
         </service>
 
         <service android:enabled="true" android:name=".RefreshService">
+        </service>
+
+        <service android:enabled="true" android:name=".DatePickerService">
+        </service>
+
+        <service android:enabled="true" android:name=".PrioritizeService">
         </service>
 
         <receiver android:name=".ServiceStarter">

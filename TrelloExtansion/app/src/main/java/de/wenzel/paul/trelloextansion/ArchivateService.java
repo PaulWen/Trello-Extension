@@ -60,12 +60,12 @@ public class ArchivateService extends Service {
     /**
      * Die Methode archiviert die gewünschte Karte.
      *
-     * @param cardeId
+     * @param cardId
      */
-    private void closeCard(String cardeId) {
+    private void closeCard(String cardId) {
         // die gewünschte Karte archivieren
         try {
-            URL url = new URL("https://trello.com/1/cards/" + cardeId + "/closed?value=true&key=" + MainService.APPLICATION_KEY + "&token=" + MainService.USER_TOKEN);
+            URL url = new URL("https://trello.com/1/cards/" + cardId + "/closed?value=true&key=" + MainService.APPLICATION_KEY + "&token=" + MainService.USER_TOKEN);
             HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
             httpCon.setRequestMethod("PUT");
             httpCon.getInputStream();

@@ -13,13 +13,16 @@ public class TrelloCardDataObject {
 	
 /////////////////////////////////////////////////Datenfelder/////////////////////////////////////////////////
 	
-	private String cardID;
+	private String cardId;
 	private String cardShortUrl;
 	private String boardName;
+	private String boardId;
 	private String listName;
 	private String cardName;
 	private Date dueDate;
-	
+	private boolean highPriority;
+	private String highPriorityLabelId;
+
 /////////////////////////////////////////////////Konstruktor/////////////////////////////////////////////////
 	
 	/**
@@ -30,27 +33,34 @@ public class TrelloCardDataObject {
 	 * @param cardName
 	 * @param dueDate 
 	 */
-	public TrelloCardDataObject(String cardID, String cardShortUrl, String boardName, String listName, String cardName, Date dueDate) {
+	public TrelloCardDataObject(String cardId, String cardShortUrl, String boardId, String boardName, String listName, String cardName, Date dueDate, boolean highPriority, String highPriorityLabelId) {
 		//Datenfelder initialisieren
-		this.cardID = cardID;
+		this.cardId = cardId;
 		this.cardShortUrl = cardShortUrl;
+		this.boardId = boardId;
 		this.boardName = boardName;
 		this.listName = listName;
 		this.cardName = cardName;
 		this.dueDate = dueDate;
+		this.highPriority = highPriority;
+        this.highPriorityLabelId = highPriorityLabelId;
 	}
 
 //////////////////////////////////////////////Getter und Setter//////////////////////////////////////////////
 
-	public String getCardID() {
-		return cardID;
+	public String getCardId() {
+		return cardId;
 	}
 
     public String getCardShortUrl() {
         return cardShortUrl;
     }
 
-    public String getBoardName() {
+	public String getBoardId() {
+		return boardId;
+	}
+
+	public String getBoardName() {
 		return boardName;
 	}
 	
@@ -65,12 +75,20 @@ public class TrelloCardDataObject {
 	public Date getDueDate() {
 		return dueDate;
 	}
-	
-///////////////////////////////////////////////geerbte Methoden//////////////////////////////////////////////
+
+	public boolean isHighPriority() {
+		return highPriority;
+	}
+
+    public String getHighPriorityLabelId() {
+        return highPriorityLabelId;
+    }
+
+    ///////////////////////////////////////////////geerbte Methoden//////////////////////////////////////////////
 
 	@Override
 	public String toString() {
-		return "/////////////////////////////////\n" + cardID + "\n" + cardShortUrl + "\n" + cardName + "\n" + boardName + "\n" + listName + "\n" + dueDate;
+		return "/////////////////////////////////\n" + cardId + "\n" + cardShortUrl + "\n" + cardName + "\n" + boardId +"\n" + boardName + "\n" + listName + "\n" + dueDate + "\n" + "highPriority:" + highPriority + "\n" + highPriorityLabelId;
 	}
 
 
